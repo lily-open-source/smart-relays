@@ -5,7 +5,7 @@ This code is for controlling relays with push button and MQTT on an ESP8266 boar
 ## Hardware Requirements
 - ESP8266 board
 - Relays (4)
-- Push buttons (5)
+- Push buttons (4)
 - Wires
 - Breadboard (optional)
 
