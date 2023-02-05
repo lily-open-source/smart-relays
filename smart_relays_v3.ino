@@ -1,10 +1,11 @@
 #define Relay1 D0
-#define Relay1_Button D7
 #define Relay2 D1
-#define Relay2_Button D6
 #define Relay3 D2
-#define Relay3_Button D5
 #define Relay4 D3
+
+#define Relay1_Button D7
+#define Relay2_Button D6
+#define Relay3_Button D5
 #define Relay4_Button D4
 
 // Initialize the relay states as false
