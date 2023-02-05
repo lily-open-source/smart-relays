@@ -6,19 +6,26 @@
 #define Relay3_Button D5
 #define Relay4 D3
 #define Relay4_Button D4
-#define reset_Button  A0
 
-int Relay1_State = 0;
-int Relay1_Button_State = 0;
-int Relay2_State = 0;
-int Relay2_Button_State = 0;
-int Relay3_State = 0;
-int Relay3_Button_State = 0;
-int Relay4_State = 0;
-int Relay4_Button_State = 0;
-int reset_State  = 0;
-int reset_Button_State  = 0;
+// Initialize the relay states as false
+bool Relay1_State = false;
+bool Relay2_State = false;
+bool Relay3_State = false;
+bool Relay4_State = false;
 
+// Initialize the button states as false
+bool Relay1_Button_State = false;
+bool Relay2_Button_State = false;
+bool Relay3_Button_State = false;
+bool Relay4_Button_State = false;
+
+// Initialize the reboot states as false
+bool reboot_flag = false;
+
+// save the counter value
+int counter = 0;
+
+// include librarys
 #include <ESP8266WiFi.h>
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
@@ -26,14 +33,14 @@ int reset_Button_State  = 0;
 AsyncWebServer server(80);
 
 //wifi config
-#define WLAN_SSID "bayar"       // Your SSID
-#define WLAN_PASS "drowssap"    // Your password
+#define WLAN_SSID "ap_name"    // Your SSID
+#define WLAN_PASS "ap_pass"    // Your password
 
 //aio config
 #define AIO_SERVER "io.adafruit.com"
 #define AIO_SERVERPORT 1883      // use 8883 for SSL
-#define AIO_USERNAME "Azzar"
-#define AIO_KEY "aio_gHzv45C8kJpUAEWVAcAarStSSFUZ"
+#define AIO_USERNAME "aio_username"
+#define AIO_KEY "aio_key"
 
 //wifi client
 WiFiClient client;
@@ -50,25 +57,29 @@ Adafruit_MQTT_Publish Light1_Publish = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME
 Adafruit_MQTT_Publish Light2_Publish = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME"/feeds/relay2");
 Adafruit_MQTT_Publish Light3_Publish = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME"/feeds/relay3");
 Adafruit_MQTT_Publish Light4_Publish = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME"/feeds/relay4");
-Adafruit_MQTT_Publish reset_Publish  = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME"/feeds/reset");
-
 
 void setup() {
-  //set pins as output
+  //set relay pins as output
   pinMode(Relay1, OUTPUT);
-  pinMode(Relay1_Button, INPUT_PULLUP);
   pinMode(Relay2, OUTPUT);
-  pinMode(Relay2_Button, INPUT_PULLUP);
   pinMode(Relay3, OUTPUT);
-  pinMode(Relay3_Button, INPUT_PULLUP);
   pinMode(Relay4, OUTPUT);
+
+  //set button pin as input pullup
+  pinMode(Relay1_Button, INPUT_PULLUP);
+  pinMode(Relay2_Button, INPUT_PULLUP);
+  pinMode(Relay3_Button, INPUT_PULLUP);
   pinMode(Relay4_Button, INPUT_PULLUP);
-  pinMode(reset_Button, INPUT_PULLUP);
 
   //connect to wifi
   WiFi.begin(WLAN_SSID, WLAN_PASS);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
+    counter++;
+    if (counter == 10) {
+      WiFi.softAP("smart_relays", "drowssap");
+      break;
+    }
   }
 
   //subscribe to mqtt feeds
@@ -124,9 +135,10 @@ void setup() {
     html += "<input type='submit' value='Toggle All' style='font-size: 18px; padding: 30px;' />";
     html += "</form><br>";
 
-    html += "<form action='/reset' method='POST'>";
-    html += "<input type='submit' value='reset' style='font-size: 18px; padding: 30px;' />";
-    html += "</form><br>";
+    // Add a reboot toggle in the web UI
+    html += "<form action='/reboot' method='POST'>";
+    html += "<input type='submit' value='Reboot' style='font-size: 18px; padding: 30px;' />";
+    html += "</form></body></html>";
 
     html += "</body></html>";
     request->send(200, "text/html", html);
@@ -180,10 +192,8 @@ void setup() {
     request->redirect("/");
   });
 
-  server.on("/reset", HTTP_POST, [](AsyncWebServerRequest * request) {
-    reset_State = 0;
-    reset_Publish.publish(reset_State);
-    request->redirect("/");
+  server.on("/reboot", HTTP_POST, [](AsyncWebServerRequest * request) {
+    ESP.restart();
   });
 
   server.begin();
@@ -246,13 +256,6 @@ void loop() {
     Relay4_State = !Relay4_State;
     digitalWrite(Relay4, Relay4_State);
     Light4_Publish.publish(Relay4_State);
-    delay(50);
-  }
-
-  reset_Button_State = digitalRead(reset_Button);
-  if (reset_Button_State == LOW) {
-    reset_State = 0;
-    reset_Publish.publish(reset_State);
     delay(50);
   }
 }
