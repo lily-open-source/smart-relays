@@ -28,14 +28,13 @@ This is the code for controlling 4 relays and a reset button using an ESP8266 mi
 The following pins are defined in the code:
 
  - Relay1: D0
- - Relay1_Button: D7
  - Relay2: D1
- - Relay2_Button: D6
  - Relay3: D2
- - Relay3_Button: D5
  - Relay4: D3
+ - Relay1_Button: D7
+ - Relay2_Button: D6
+ - Relay3_Button: D5
  - Relay4_Button: D4
- - reset_Button: A0
 
 ## Wifi and Adafruit IO Configuration
 Wifi credentials must be provided in the following lines:
