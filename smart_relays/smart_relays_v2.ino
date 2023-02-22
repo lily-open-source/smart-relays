@@ -1,19 +1,25 @@
-#define Relay1 D1
-#define Relay1_Button D5
-#define Relay2 D2
-#define Relay2_Button D6
-#define Relay3 D3
-#define Relay3_Button D7
-#define Relay4 D4
-#define Relay4_Button D8
+// Relay pins
+const int Relay1 = 16;  // D0 on NodeMCU
+const int Relay2 = 5;   // D1 on NodeMCU
+const int Relay3 = 4;   // D2 on NodeMCU
+const int Relay4 = 0;   // D3 on NodeMCU
 
+// Button pins
+const int Relay1_Button = 2;   // D4 on NodeMCU
+const int Relay2_Button = 14;  // D5 on NodeMCU
+const int Relay3_Button = 12;  // D6 on NodeMCU
+const int Relay4_Button = 13;  // D7 on NodeMCU
+
+// relay states
 int Relay1_State = 0;
-int Relay1_Button_State = 0;
 int Relay2_State = 0;
-int Relay2_Button_State = 0;
 int Relay3_State = 0;
-int Relay3_Button_State = 0;
 int Relay4_State = 0;
+
+//button states 
+int Relay1_Button_State = 0;
+int Relay2_Button_State = 0;
+int Relay3_Button_State = 0;
 int Relay4_Button_State = 0;
 
 #include <ESP8266WiFi.h>
