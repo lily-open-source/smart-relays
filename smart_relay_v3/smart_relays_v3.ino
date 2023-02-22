@@ -1,3 +1,4 @@
+/*
 #define Relay1 D0
 #define Relay2 D1
 #define Relay3 D2
@@ -7,6 +8,19 @@
 #define Relay2_Button D6
 #define Relay3_Button D5
 #define Relay4_Button D4
+*/
+
+// Relay pins
+const int Relay1 = 16;  // D0 on NodeMCU
+const int Relay2 = 5;   // D1 on NodeMCU
+const int Relay3 = 4;   // D2 on NodeMCU
+const int Relay4 = 0;   // D3 on NodeMCU
+
+// Button pins
+const int Relay1_Button = 2;   // D4 on NodeMCU
+const int Relay2_Button = 14;  // D5 on NodeMCU
+const int Relay3_Button = 12;  // D6 on NodeMCU
+const int Relay4_Button = 13;  // D7 on NodeMCU
 
 // Initialize the relay states as false
 bool Relay1_State = false;
