@@ -1,15 +1,3 @@
-/*
-#define Relay1 D0
-#define Relay2 D1
-#define Relay3 D2
-#define Relay4 D3
-
-#define Relay1_Button D7
-#define Relay2_Button D6
-#define Relay3_Button D5
-#define Relay4_Button D4
-*/
-
 // Relay pins
 const int Relay1 = 16;  // D0 on NodeMCU
 const int Relay2 = 5;   // D1 on NodeMCU
