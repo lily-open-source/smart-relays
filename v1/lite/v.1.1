@@ -1,0 +1,48 @@
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+#include <DHT.h>
+
+const char* ssid = "your_ssid";
+const char* password = "ssid_pass";
+const int RELAY_PINS[] = {D0, D1, D2, D3};
+#define DHTPIN D4
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+BlynkTimer timer;
+
+void sendSensor()
+{
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  float i = dht.computeHeatIndex(t, h, false);
+
+
+  if (isnan(h) || isnan(t)) return;
+  
+  Blynk.virtualWrite(V5, t);
+  Blynk.virtualWrite(V6, h);
+  Blynk.virtualWrite(V7, i);
+}
+
+void setup() {
+  for (int i = 0; i < 4; i++)
+    pinMode(RELAY_PINS[i], OUTPUT);
+  
+  Blynk.begin("blynk_auth_token", ssid, password);
+  dht.begin();
+  timer.setInterval(1000L, sendSensor);
+}
+
+void relaySwitch(int index, int pinValue) {
+  digitalWrite(RELAY_PINS[index], pinValue);
+}
+
+BLYNK_WRITE(V1) {relaySwitch(0, param.asInt());}
+BLYNK_WRITE(V2) {relaySwitch(1, param.asInt());}
+BLYNK_WRITE(V3) {relaySwitch(2, param.asInt());}
+BLYNK_WRITE(V4) {relaySwitch(3, param.asInt());}
+
+void loop() {
+  Blynk.run();
+  timer.run();
+}
