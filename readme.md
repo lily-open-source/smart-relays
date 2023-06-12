@@ -36,6 +36,52 @@ The following pins are defined in the code:
 - Relay3_Button: D5
 - Relay4_Button: D4
 
+## Flowchart 
+
+```mermaid
+graph LR
+A[Start] --> B[Set relay pins as output]
+B --> C[Set button pins as input pullup]
+C --> D[Initialize serial communication]
+D --> E[Connect to WiFi]
+E --> F{WiFi connected?}
+F -- No --> E
+F -- Yes --> G[Start web server]
+G --> H[Serve static files from SPIFFS]
+H --> I[Begin the server]
+I --> J[Initialize MQTT subscriptions]
+J --> K[Reconnect WiFi if connection lost]
+K --> L{New MQTT data?}
+L -- No --> M[Check button states]
+L -- Yes --> N[Update relay states]
+N --> O[Check Light1 feed]
+O -- Yes --> P{Relay1 state changed?}
+P -- No --> O
+P -- Yes --> Q[Update Relay1 state]
+Q --> R[Print Relay1 state]
+R --> O
+O --> S[Check Light2 feed]
+S -- Yes --> T{Relay2 state changed?}
+T -- No --> S
+T -- Yes --> U[Update Relay2 state]
+U --> V[Print Relay2 state]
+V --> S
+S --> W[Check Light3 feed]
+W -- Yes --> X{Relay3 state changed?}
+X -- No --> W
+X -- Yes --> Y[Update Relay3 state]
+Y --> Z[Print Relay3 state]
+Z --> W
+W --> AA[Check Light4 feed]
+AA -- Yes --> BB{Relay4 state changed?}
+BB -- No --> AA
+BB -- Yes --> CC[Update Relay4 state]
+CC --> DD[Print Relay4 state]
+DD --> AA
+AA --> L
+M --> K
+```
+
 ## WiFi and Adafruit IO Configuration
 WiFi credentials must be provided in the following lines:
 
