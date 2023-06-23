@@ -1,123 +1,108 @@
-# ESP8266 Smart Relay Control with Push Button, HTML Page, and MQTT
+# MQTT Relay Control
 
-This code is for controlling relays with push buttons, an HTML page, and MQTT on an ESP8266 board.
+This code provides a simple implementation of an MQTT-based relay control system using an ESP8266 board (such as NodeMCU). It connects to the Adafruit IO MQTT server and allows you to control a relay remotely through the Adafruit IO platform or a physical button connected to the board.
 
-## Hardware Requirements
-- ESP8266 board
-- Relays (4)
-- Push buttons (4)
-- Wires
-- Breadboard (optional)
+## Prerequisites
 
-## Software Requirements
-- Arduino IDE
-- ESP8266 Board Package
-- Adafruit MQTT library
+Before running this code, make sure you have the following:
 
-## Setup
-1. Install the ESP8266 board package and the necessary libraries (ESP8266WiFi, Adafruit_MQTT, and Adafruit_MQTT_Client) in the Arduino IDE.
-2. Replace the placeholder values in the code with your own WiFi SSID and password, MQTT server, username, and key.
-3. Assign the correct digital pins for the relays and push buttons in the code.
-4. Upload the code to your ESP8266 board.
-5. Connect the board to a power source and make sure it is connected to the same network as your MQTT server.
+- An ESP8266-based board (e.g., NodeMCU) with the necessary firmware installed.
+- Arduino IDE with the ESP8266 board package installed.
+- An Adafruit IO account.
+- Wi-Fi network credentials (SSID and password).
 
-## Introduction
-This is the code for controlling 4 relays and a reset button using an ESP8266 microcontroller and the Adafruit IO platform. The relays can be controlled through buttons, a web server, and the Adafruit IO dashboard. The code sets up a web server to receive HTTP requests and establishes an MQTT connection to Adafruit IO to receive and publish data.
+## Hardware Setup
 
-## Pin Configuration
-The following pins are defined in the code:
+Connect the following components to your ESP8266 board:
 
-- Relay1: D0
-- Relay2: D1
-- Relay3: D2
-- Relay4: D3
-- Relay1_Button: D7
-- Relay2_Button: D6
-- Relay3_Button: D5
-- Relay4_Button: D4
+- Connect a push button to pin D2 (GPIO 2) of the board. This button will be used to control the relay locally.
+- Connect a relay module to pin D3 (GPIO 3) of the board. This relay will control the electrical device you want to switch on/off.
 
-## Flowchart 
+## Software Setup
 
-```mermaid
-graph LR
-A[Start] --> B[Set relay pins as output]
-B --> C[Set button pins as input pullup]
-C --> D[Initialize serial communication]
-D --> E[Connect to WiFi]
-E --> F{WiFi connected?}
-F -- No --> E
-F -- Yes --> G[Start web server]
-G --> H[Serve static files from SPIFFS]
-H --> I[Begin the server]
-I --> J[Initialize MQTT subscriptions]
-J --> K[Reconnect WiFi if connection lost]
-K --> L{New MQTT data?}
-L -- No --> M[Check button states]
-L -- Yes --> N[Update relay states]
-N --> O[Check Light1 feed]
-O -- Yes --> P{Relay1 state changed?}
-P -- No --> O
-P -- Yes --> Q[Update Relay1 state]
-Q --> R[Print Relay1 state]
-R --> O
-O --> S[Check Light2 feed]
-S -- Yes --> T{Relay2 state changed?}
-T -- No --> S
-T -- Yes --> U[Update Relay2 state]
-U --> V[Print Relay2 state]
-V --> S
-S --> W[Check Light3 feed]
-W -- Yes --> X{Relay3 state changed?}
-X -- No --> W
-X -- Yes --> Y[Update Relay3 state]
-Y --> Z[Print Relay3 state]
-Z --> W
-W --> AA[Check Light4 feed]
-AA -- Yes --> BB{Relay4 state changed?}
-BB -- No --> AA
-BB -- Yes --> CC[Update Relay4 state]
-CC --> DD[Print Relay4 state]
-DD --> AA
-AA --> L
-M --> K
-```
+1. Install the necessary libraries:
+   - Adafruit MQTT Library: Install it from the Arduino Library Manager (Sketch -> Include Library -> Manage Libraries) by searching for "Adafruit MQTT Library" and clicking "Install".
+   - Adafruit MQTT Client Library: Install it from the Arduino Library Manager by searching for "Adafruit MQTT Client" and clicking "Install".
+   - ESP8266WiFi Library: Install it from the Arduino Library Manager by searching for "ESP8266WiFi" and clicking "Install".
 
-## WiFi and Adafruit IO Configuration
-WiFi credentials must be provided in the following lines:
+2. Open the Arduino IDE and create a new sketch.
 
-```
-#define WLAN_SSID "your-ap" // Your SSID
-#define WLAN_PASS "ap_pass" // Your password
-```
+3. Copy and paste the provided code into the sketch.
 
-Adafruit IO credentials must be provided in the following lines:
+4. Update the following constants with your Wi-Fi and Adafruit IO credentials:
+   - `ssid`: Set it to your Wi-Fi network SSID.
+   - `password`: Set it to your Wi-Fi network password.
+   - `AIO_USERNAME`: Set it to your Adafruit IO username.
+   - `AIO_KEY`: Set it to your Adafruit IO key.
 
-```
-#define AIO_SERVER "io.adafruit.com"
-#define AIO_SERVERPORT 1883 // use 8883 for SSL
-#define AIO_USERNAME "aio_username"
-#define AIO_KEY "aio_key"
-```
+5. Upload the sketch to your ESP8266 board.
 
-
-## Functionality
-The code sets up a web server to serve an HTML page that allows the user to toggle the state of the relays. It also establishes an MQTT connection to Adafruit IO and subscribes to 4 feeds for the relays. The state of the relays can be controlled through the web page or the Adafruit IO dashboard.
-
-## Dependencies
-The following libraries are used in the code and must be installed:
-
-- ESP8266WiFi
-- Adafruit_MQTT
-- Adafruit_MQTT_Client
-- ESPAsyncWebServer
+6. Open the serial monitor (Tools -> Serial Monitor) to monitor the board's output.
 
 ## Usage
-1. Connect the relays and push buttons to the specified digital pins on the ESP8266 board.
-2. Configure the WiFi and Adafruit IO credentials in the code.
-3. Upload the code to the ESP8266 board.
-4. Power up the board and ensure it is connected to the same network as your MQTT server.
-5. Access the web page hosted by the ESP8266 board to control the relays.
-6. Optionally, use the Adafruit IO dashboard to control the relays remotely.
 
-## Conclusion
-This code provides a simple solution for controlling relays through push buttons, an HTML page, and the Adafruit IO platform. It can be modified for different applications and further developed to meet specific requirements.
+Once the code is uploaded to your ESP8266 board, it will connect to your Wi-Fi network and Adafruit IO MQTT server.
+
+### Remote Control via Adafruit IO
+
+1. Go to the [Adafruit IO](https://io.adafruit.com) website  and log in to your account.
+
+2. Create a new feed called "relay" in your Adafruit IO dashboard.
+
+3. To control the relay remotely, navigate to your "relay" feed and send MQTT messages with the payload `1` to turn the relay on or `0` to turn it off.
+
+### Local Control via Push Button
+
+Press the push button connected to the D2 pin of the ESP8266 board to toggle the state of the relay.
+
+### Monitoring
+
+The serial monitor will display the current status of the relay (ON or OFF) and indicate successful or failed publishing to Adafruit IO.
+
+## Flowchart
+
+```mermaid
+graph TD
+A[Start] --> B[Initialize libraries and credentials]
+B --> C[Set up button and relay pins]
+C --> D[Connect to Wi-Fi and Adafruit IO MQTT server]
+D --> E[Set initial relay state to off]
+E --> F[Enter main loop]
+F --> G[Process incoming MQTT packets]
+G --> H[Read button state]
+H --> I[Publish button state to Adafruit IO]
+I --> F
+G --> J[If new MQTT message received for relay feed]
+J --> K[Update relay state]
+K --> L[If relay state is '1']
+L --> M[Turn on relay]
+M --> N[Print 'Relay ON']
+L --> O[If relay state is '0']
+O --> P[Turn off relay]
+P --> Q[Print 'Relay OFF']
+J --> R[Publish current relay state to Adafruit IO]
+R --> S[If publishing successful]
+S --> T[Print 'Published to Adafruit IO']
+R --> U[If publishing fails]
+U --> V[Print 'Publishing failed']
+R --> F
+```
+
+## Troubleshooting
+
+- If the ESP8266 fails to connect to your Wi-Fi network, ensure that you have entered the correct SSID and password.
+- Check your Adafruit IO credentials (username and key) to ensure they are correct.
+- Verify the wiring connections between the ESP8266 board, button, and relay.
+- Make sure you have a stable internet connection.
+
+## Note
+
+This code serves as a basic example and may require modifications to suit your specific requirements. Refer to the official documentation of the libraries used for more advanced usage and functionality.
+
+## Credits
+
+This code is based on the Adafruit IO Arduino library examples and modified for this specific relay control application.
+
+- [Adafruit IO Arduino Library](https://github.com/adafruit/Adafruit_IO_Arduino)
+- [Adafruit MQTT Library](https://github.com/adafruit/Adafruit_MQTT_Library)
+- [ESP8266WiFi Library](https://github.com/esp8266/Arduino)
