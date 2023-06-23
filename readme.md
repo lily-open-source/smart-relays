@@ -2,6 +2,10 @@
 
 This code provides a simple implementation of an MQTT-based relay control system using an ESP8266 board (such as NodeMCU). It connects to the Adafruit IO MQTT server and allows you to control a relay remotely through the Adafruit IO platform or a physical button connected to the board.
 
+translation:
+
+- [indonesian](https://github.com/1999AZZAR/smart-relays/blob/single/readme_id.md)
+
 ## Prerequisites
 
 Before running this code, make sure you have the following:
