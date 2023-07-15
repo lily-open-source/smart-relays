@@ -37,6 +37,28 @@ Once the code is set up and running on the ESP8266 device, you can control the r
 
 To control a relay, publish a message with the desired state to the corresponding MQTT feed. The state can be either `0` or `1`, where `0` represents the relay being off and `1` represents the relay being on.
 
+## Flowchart
+
+```mermaid
+graph TD
+    A[Start] --> B[Define pins]
+    B --> C[Include libraries]
+    C --> D[Configure Wi-Fi]
+    D --> E[Configure Adafruit IO]
+    E --> F[Create Wi-Fi client]
+    F --> G[Subscribe to MQTT feeds]
+    G --> H[Setup loop]
+    H --> I[Connect to MQTT]
+    I --> J[Check for new data]
+    J --> K[Read subscription]
+    K --> L[Update relay state]
+    L --> J
+    J --> M[End]
+    M --> N{Received new data?}
+    N -- Yes --> J
+    N -- No --> H
+```
+
 ## Notes
 
 - The code continuously checks for new data from the MQTT server in the `loop()` function. It reads any incoming messages from the subscribed MQTT feeds and updates the state of the corresponding relays accordingly.
