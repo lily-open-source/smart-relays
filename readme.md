@@ -1,5 +1,7 @@
 # MQTT Relay Control
 
+[![CodeFactor](https://www.codefactor.io/repository/github/1999azzar/smart-relays/badge)](https://www.codefactor.io/repository/github/1999azzar/smart-relays)
+
 This code provides a simple implementation of an MQTT-based relay control system using an ESP8266 board (such as NodeMCU). It connects to the Adafruit IO MQTT server and allows you to control a relay remotely through the Adafruit IO platform or a physical button connected to the board.
 
 translation:
